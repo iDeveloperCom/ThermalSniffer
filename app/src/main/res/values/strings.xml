@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Thermal Sniffer</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="searching_bluetooth_sender">Searching Bluetooth Sender!</string>
+    <string name="ble_image">BLE Image</string>
+    <string name="tempslidertext">Temp Sensitivity</string>
+    <string name="windslidertext">Wind Sensitivity</string>
+    <string name="timeslidertext">Time Axis Scale</string>
+    <string name="celcius">°C</string>
+    <string name="fahrenheit">°F</string>
+    <string name="c">°C</string>
+    <string name="f">°F</string>
+</resources>
