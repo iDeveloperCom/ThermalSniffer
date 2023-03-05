@@ -3,8 +3,10 @@ package com.ideveloper.thermalsniffer;
 import static java.lang.Math.abs;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -15,10 +17,17 @@ import android.view.LayoutInflater;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -27,7 +36,6 @@ import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.ideveloper.thermalsniffer.data.WeatherData;
 import com.ideveloper.thermalsniffer.data.WeatherDataWrapper;
 import com.ideveloper.thermalsniffer.databinding.FragmentSecondBinding;
@@ -37,7 +45,7 @@ import java.text.ParsePosition;
 import java.util.Locale;
 
 @SuppressLint("MissingPermission")
-public class SecondFragment extends Fragment implements DataPassListener {
+public class SecondFragment extends Fragment implements DataPassListener, CustomSetupDialog.CustomSetupDialogListener {
 
     private final WeatherDataWrapper dataset = new WeatherDataWrapper();
     private FragmentSecondBinding binding;
@@ -405,17 +413,19 @@ public class SecondFragment extends Fragment implements DataPassListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.settings);
-                Button dialogButton = (Button) dialog.findViewById(R.id.idButtonOk);
-                // if button is clicked, close the custom dialog
-                dialogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();            }
+
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                // Create and show the dialog.
+                CustomSetupDialog newFragment = CustomSetupDialog.newInstance(MAX_TIME_SENSITIVITY, MAX_TEMP_SENSITIVITY, MAX_WIND_SENSITIVITY, windCalibration, showInFahrenheit, showInMinutes, autoAdjustTemperatureRange);
+                newFragment.setListener(SecondFragment.this);
+                newFragment.show(ft, "dialog");
+            }
         });
     }
 
@@ -495,6 +505,17 @@ public class SecondFragment extends Fragment implements DataPassListener {
         gradientRecalculate(data.getTemperature() - data.getMeanTemperature());
     }
 
-
+    @Override
+    public void onFinishSetupDialog(int maxTimeSensitivity, int maxTempSensitivity, int maxWindSensitivity, int windCalibration, boolean showInFahrenheit, boolean showInMinutes, boolean autoAdjustTemperatureRange) {
+        MAX_TEMP_SENSITIVITY = maxTempSensitivity;
+        MAX_TIME_SENSITIVITY = maxTimeSensitivity;
+        MAX_WIND_SENSITIVITY = maxWindSensitivity;
+        this.windCalibration = windCalibration;
+        this.showInFahrenheit = showInFahrenheit;
+        this.showInMinutes = showInMinutes;
+        this.autoAdjustTemperatureRange = autoAdjustTemperatureRange;
+        writeChartPrefs();
+        axisPlot.redraw();
+    }
 }
 
