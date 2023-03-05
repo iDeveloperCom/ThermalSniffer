@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editTextTextPersonName6"
+        android:layout_width="169dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:editable="false"
+        android:ems="10"
+        android:enabled="false"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:text="@string/max_wind"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName3"
+        android:layout_width="169dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:editable="false"
+        android:ems="10"
+        android:enabled="false"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:text="@string/wind_calibration"
+        app:layout_constraintStart_toStartOf="@+id/switchAutoScale"
+        app:layout_constraintTop_toBottomOf="@+id/switchAutoScale" />
+
+    <Switch
+        android:id="@+id/switchAutoScale"
+        android:layout_width="168dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/temp_range_auto"
+        app:layout_constraintStart_toStartOf="@+id/switchFahrenheit"
+        app:layout_constraintTop_toBottomOf="@+id/switchFahrenheit" />
+
+    <Switch
+        android:id="@+id/switchFahrenheit"
+        android:layout_width="168dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/show_in_celcius"
+        app:layout_constraintStart_toStartOf="@+id/switchMinutes"
+        app:layout_constraintTop_toBottomOf="@+id/switchMinutes" />
+
+    <Switch
+        android:id="@+id/switchMinutes"
+        android:layout_width="170dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/in_seconds"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName6"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName6" />
+
+    <EditText
+        android:id="@+id/editMaxWind"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:ems="10"
+        android:hint="@android:string/untitled"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName6"
+        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName6"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <EditText
+        android:id="@+id/editMaxTemp"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:ems="10"
+        android:hint="@android:string/untitled"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName2"
+        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName2" />
+
+    <EditText
+        android:id="@+id/editWindDivider"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:ems="10"
+        android:hint="@android:string/untitled"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName3"
+        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName3" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName2"
+        android:layout_width="169dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:editable="false"
+        android:ems="10"
+        android:enabled="false"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:text="@string/max_temperature"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName4"
+        android:layout_width="148dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:clickable="false"
+        android:editable="false"
+        android:ems="10"
+        android:enabled="false"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:text="@string/in_minutes"
+        app:layout_constraintBottom_toBottomOf="@+id/switchMinutes"
+        app:layout_constraintStart_toEndOf="@+id/switchMinutes" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName5"
+        android:layout_width="147dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="24dp"
+        android:clickable="false"
+        android:editable="false"
+        android:ems="10"
+        android:enabled="false"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:text="@string/in_fahrenheit"
+        app:layout_constraintBottom_toBottomOf="@+id/switchFahrenheit"
+        app:layout_constraintStart_toEndOf="@+id/switchFahrenheit" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="43dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_setup1" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="169dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:editable="false"
+        android:ems="10"
+        android:enabled="false"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:text="@string/max_time_to_show"
+        app:layout_constraintStart_toStartOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <EditText
+        android:id="@+id/editMaxTime"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName"
+        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/idButtonOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:text="Close"
+        app:layout_constraintEnd_toEndOf="@+id/editWindDivider"
+        app:layout_constraintTop_toBottomOf="@+id/editWindDivider" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

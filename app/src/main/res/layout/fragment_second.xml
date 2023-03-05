@@ -9,65 +9,82 @@
     android:backgroundTintMode="screen"
     tools:context=".SecondFragment">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/submit"
+        android:src="@drawable/ic_baseline_settings_24"
+        ap:layout_constraintBottom_toBottomOf="parent"
+        ap:layout_constraintStart_toStartOf="parent"
+        tools:ignore="ImageContrastCheck,ImageContrastCheck" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFEFD5"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/plotCharts"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="#FFEFD5"
             android:layout_weight="1"
+            android:background="#FFEFD5"
             android:orientation="vertical">
 
             <com.androidplot.xy.XYPlot
-            style="@style/APDefacto.Light"
-            android:id="@+id/temperatureChart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="40"
-            android:background="#FFEFD5"
-            ap:graphBackgroundColor="#FFEFD5"
-            ap:backgroundColor="#FFEFD5"
-            ap:legendVisible="false"
-            ap:renderMode="use_background_thread" />
+                android:id="@+id/temperatureChart"
+                style="@style/APDefacto.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:background="#FFEFD5"
+                ap:backgroundColor="#FFEFD5"
+                ap:graphBackgroundColor="#FFEFD5"
+                ap:legendVisible="false"
+                ap:renderMode="use_background_thread" />
+
             <com.androidplot.xy.XYPlot
-            style="@style/APDefacto.Light"
-            android:id="@+id/axisChart"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#FFEFD5"
-            ap:graphBackgroundColor="#FFEFD5"
-            ap:backgroundColor="#FFEFD5"
-            ap:legendVisible="false"
-            ap:lineLabelRotationBottom="0"
-            ap:renderMode="use_background_thread" />
+                android:id="@+id/axisChart"
+                style="@style/APDefacto.Light"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#F8D294"
+                ap:backgroundColor="#F8D294"
+                ap:graphBackgroundColor="#F8D294"
+                ap:legendVisible="false"
+                ap:lineLabelRotationBottom="0"
+                ap:renderMode="use_background_thread" />
+
             <com.androidplot.xy.XYPlot
-            style="@style/APDefacto.Light"
-            android:id="@+id/windChart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFEFD5"
-            ap:graphBackgroundColor="#FFEFD5"
-            ap:backgroundColor="#FFEFD5"
-            android:layout_weight="60"
-            ap:legendVisible="false"
-            ap:renderMode="use_background_thread" />
+                android:id="@+id/windChart"
+                style="@style/APDefacto.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="60"
+                android:background="#FFEFD5"
+                ap:backgroundColor="#FFEFD5"
+                ap:graphBackgroundColor="#FFEFD5"
+                ap:legendVisible="false"
+                ap:renderMode="use_background_thread" />
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/temperatureHeatChart"
-            android:layout_width="wrap_content"
+            android:layout_width="25dp"
             android:layout_height="match_parent"
-            android:layout_weight="9"
             android:background="#FFEFD5"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:translationZ="100dp">
 
             <View
                 android:id="@+id/temperatureHeatChart1"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
 
                 android:background="#000000"
@@ -75,7 +92,7 @@
 
             <View
                 android:id="@+id/temperatureHeatChart2"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
                 android:background="@drawable/gradient_drawable"

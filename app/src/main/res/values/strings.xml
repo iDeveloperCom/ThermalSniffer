@@ -17,4 +17,15 @@
     <string name="fahrenheit">°F</string>
     <string name="c">°C</string>
     <string name="f">°F</string>
+    <string name="submit">Submit</string>
+    <string name="wind_calibration">Wind calibration</string>
+    <string name="in_fahrenheit">in Fahrenheit</string>
+    <string name="temp_range_auto">temp range auto</string>
+    <string name="in_minutes">in Minutes</string>
+    <string name="max_time_to_show">Max Time to show</string>
+    <string name="icon">icon</string>
+    <string name="max_temperature">Max Temperature</string>
+    <string name="max_wind">Max Wind</string>
+    <string name="in_seconds">in Seconds</string>
+    <string name="show_in_celcius">show in Celcius</string>
 </resources>
