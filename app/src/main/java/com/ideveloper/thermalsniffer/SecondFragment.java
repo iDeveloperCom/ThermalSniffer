@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -188,7 +189,7 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
             TIME_SENSITIVITY = (TIME_SENSITIVITY < 60 ? 60 : TIME_SENSITIVITY); // prevent our view from becoming too small //
             TIME_SENSITIVITY = (TIME_SENSITIVITY > MAX_TIME_SENSITIVITY ? MAX_TIME_SENSITIVITY : TIME_SENSITIVITY); // prevent our view from becoming too small //
 
-            int rounded = ((int)TIME_SENSITIVITY / 100 ) * 100;
+            int rounded = ((int)TIME_SENSITIVITY / 10 ) * 10;
             TIME_SENSITIVITY = rounded;
 
             adjustDomains();

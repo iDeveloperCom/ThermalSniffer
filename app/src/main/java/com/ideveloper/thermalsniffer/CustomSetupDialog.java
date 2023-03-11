@@ -1,16 +1,17 @@
 package com.ideveloper.thermalsniffer;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentTransaction;
 
 public class CustomSetupDialog extends DialogFragment {
 
@@ -49,6 +50,7 @@ public class CustomSetupDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        assert getArguments() != null;
         mMaxTimeSensitivity = getArguments().getInt("maxTimeSensitivity");
         mMaxTempSensitivity = getArguments().getInt("maxTempSensitivity");
         mMaxWindSensitivity = getArguments().getInt("maxWindSensitivity");
@@ -63,8 +65,9 @@ public class CustomSetupDialog extends DialogFragment {
         return inflater.inflate(R.layout.dialog_settings, container);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         maxTime = view.findViewById(R.id.editMaxTime);
         maxTemp = view.findViewById(R.id.editMaxTemp);
@@ -85,15 +88,15 @@ public class CustomSetupDialog extends DialogFragment {
 
         Button dialogButton = view.findViewById(R.id.idButtonOk);
         dialogButton.setOnClickListener(v -> {
-            mMaxTimeSensitivity = Integer.valueOf(maxTime.getText().toString());
+            mMaxTimeSensitivity = Integer.parseInt(maxTime.getText().toString());
             if (mMaxTimeSensitivity <= 60) mMaxTimeSensitivity = 60;
-            mMaxTempSensitivity = Integer.valueOf(maxTemp.getText().toString());
+            mMaxTempSensitivity = Integer.parseInt(maxTemp.getText().toString());
             if (mMaxTempSensitivity > 20) mMaxTempSensitivity = 20;
             if (mMaxTempSensitivity <= 0) mMaxTempSensitivity = 1;
-            mMaxWindSensitivity = Integer.valueOf(maxWind.getText().toString());
+            mMaxWindSensitivity = Integer.parseInt(maxWind.getText().toString());
             if (mMaxWindSensitivity > 10) mMaxWindSensitivity = 10;
             if (mMaxWindSensitivity <= 0) mMaxWindSensitivity = 1;
-            mWindCalibration = Integer.valueOf(windCal.getText().toString());
+            mWindCalibration = Integer.parseInt(windCal.getText().toString());
             if (mWindCalibration < 1) mWindCalibration = 1;
             mShowInFahrenheit = isFahrenheit.isChecked();
             mShowInMinutes = inMinutes.isChecked();
