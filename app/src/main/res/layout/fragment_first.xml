@@ -6,19 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/ble_image"
-        android:src="@drawable/icon_bluetooth_150x150"
+    <Button
+        android:id="@+id/bluetooth"
+        android:background="@color/ap_transparent"
+        android:backgroundTint="@color/ap_transparent"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:drawableTop="@drawable/icon_bluetooth_150x150"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ImageContrastCheck"
-        tools:src="@drawable/icon_bluetooth_150x150" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
@@ -31,4 +29,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

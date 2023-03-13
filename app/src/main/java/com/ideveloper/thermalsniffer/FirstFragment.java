@@ -25,10 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.ImageView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -55,7 +54,6 @@ public class FirstFragment extends Fragment {
     private static boolean scanning = false;
     private static boolean connected = false;
     private boolean pushedForward = false;
-    private boolean pushedBack = false;
 
     private FragmentFirstBinding binding;
     Animation anim;
@@ -70,12 +68,9 @@ public class FirstFragment extends Fragment {
                 mBluetoothAdapter.cancelDiscovery();
                 gatt.discoverServices();
             } else if (newState == STATE_DISCONNECTED) {
-                if (!pushedBack) {
-                    pushedBack = true;
-                    Handler mainHandler = new Handler(Looper.getMainLooper());
-                    mainHandler.post(
-                            ()-> NavHostFragment.findNavController(FirstFragment.this).popBackStack());
-                }
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.post(
+                        ()-> NavHostFragment.findNavController(FirstFragment.this).popBackStack());
             }
         }
 
@@ -172,10 +167,10 @@ public class FirstFragment extends Fragment {
         if (!scanning) {
             scanning = true;
             ScanSettings scanSettings = new ScanSettings.Builder()
-                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                    .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                     .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                    .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
-                    .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
+                    .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
+                    .setNumOfMatches(ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT)
                     .setReportDelay(0L)
                     .build();
 
@@ -186,6 +181,7 @@ public class FirstFragment extends Fragment {
             List<ScanFilter> filters;
             filters = new ArrayList<>();
             ScanFilter filter;
+
             for (String name : names) {
                 filter = new ScanFilter.Builder()
                         .setDeviceName(name)
@@ -212,10 +208,12 @@ public class FirstFragment extends Fragment {
     }
 
     private void setupAndStartBluetooth() {
+
+        stopScanning();
+
         scanning = false;
         connected = false;
         pushedForward = false;
-        pushedBack = false;
         connectedDevice = null;
         mBluetoothAdapter = null;
         bluetoothLeScanner = null;
@@ -238,14 +236,17 @@ public class FirstFragment extends Fragment {
 
     }
 
-
-
-    @SuppressWarnings("ConstantConditions")
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.textView).startAnimation(anim);
-        ImageView bleImage = getView().findViewById(R.id.imageView);
-        bleImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.icon_bluetooth_150x150, null));
+        Button bleButton = view.findViewById(R.id.bluetooth);
+        bleButton.setOnClickListener(v -> setupAndStartBluetooth());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         setupAndStartBluetooth();
     }
 
