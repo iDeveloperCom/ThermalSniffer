@@ -8,13 +8,14 @@
 
     <Button
         android:id="@+id/bluetooth"
-        android:background="@color/ap_transparent"
-        android:backgroundTint="@color/ap_transparent"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/ap_transparent"
+        android:backgroundTint="@color/ap_transparent"
         android:drawableTop="@drawable/icon_bluetooth_150x150"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,12 +23,32 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
         android:text="@string/searching_bluetooth_sender"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/versionName"
         tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/versionCode"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="xxx
+"
+        app:layout_constraintStart_toStartOf="@+id/bluetooth"
+        app:layout_constraintTop_toBottomOf="@+id/bluetooth" />
+
+    <TextView
+        android:id="@+id/versionName"
+        android:layout_width="177dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="32dp"
+        android:text="xxx"
+        app:layout_constraintStart_toEndOf="@+id/versionCode"
+        app:layout_constraintTop_toBottomOf="@+id/bluetooth" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

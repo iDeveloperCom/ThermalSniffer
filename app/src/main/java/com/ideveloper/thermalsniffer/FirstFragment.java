@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -38,6 +39,8 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.ideveloper.thermalsniffer.BuildConfig;
+
 
 public class FirstFragment extends Fragment {
 
@@ -242,6 +245,12 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.textView).startAnimation(anim);
         Button bleButton = view.findViewById(R.id.bluetooth);
         bleButton.setOnClickListener(v -> setupAndStartBluetooth());
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        TextView vCode = view.findViewById(R.id.versionCode);
+        TextView vName = view.findViewById(R.id.versionName);
+        vCode.setText("Ver " + String.valueOf(versionCode));
+        vName.setText(versionName);
     }
 
     @Override

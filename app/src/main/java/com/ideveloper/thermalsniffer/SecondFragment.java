@@ -3,10 +3,7 @@ package com.ideveloper.thermalsniffer;
 import static java.lang.Math.abs;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -17,16 +14,11 @@ import android.view.LayoutInflater;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.androidplot.util.PixelUtils;
@@ -45,8 +37,11 @@ import java.text.Format;
 import java.text.ParsePosition;
 import java.util.Locale;
 
+
 @SuppressLint("MissingPermission")
 public class SecondFragment extends Fragment implements DataPassListener, CustomSetupDialog.CustomSetupDialogListener {
+
+    private boolean isRed = false;
 
     private final WeatherDataWrapper dataset = new WeatherDataWrapper();
     private FragmentSecondBinding binding;
@@ -58,12 +53,11 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
     private XYPlot axisPlot;
     private XYPlot windPlot;
 
-    private WeatherData oldData = null;
     private double pivotTemperature = 0;
 
     private int MAX_TIME_SENSITIVITY = 1200;
     private int MAX_TEMP_SENSITIVITY = 5;
-    private int MAX_WIND_SENSITIVITY = 8;
+    private int MIN_WIND_SENSITIVITY = 0;
 
     private float TIME_SENSITIVITY;
     private float TEMPERATURE_SENSITIVITY;
@@ -80,6 +74,8 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
     private ScaleGestureDetector mDomainScaleDetector;
     private ScaleGestureDetector mTemperatureScaleDetector;
     private ScaleGestureDetector mWindScaleDetector;
+
+    private Button indicatorButton;
 
     private void writeChartPrefs() {
         SharedPreferences sharedPref = requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
@@ -155,7 +151,7 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
             TEMPERATURE_SENSITIVITY *= scaleFactor;
             TEMPERATURE_SENSITIVITY = (TEMPERATURE_SENSITIVITY < 1 ? 1 : TEMPERATURE_SENSITIVITY); // prevent our view from becoming too small //
             TEMPERATURE_SENSITIVITY = (TEMPERATURE_SENSITIVITY > MAX_TEMP_SENSITIVITY ? MAX_TEMP_SENSITIVITY : TEMPERATURE_SENSITIVITY); // prevent our view from becoming too small //
-            adjustTemperatureRange(oldData.getTemperature());
+            adjustTemperatureRange(oldTempValue);
             temperaturePlot.redraw();
             writeChartPrefs();
         }
@@ -189,8 +185,8 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
             TIME_SENSITIVITY = (TIME_SENSITIVITY < 60 ? 60 : TIME_SENSITIVITY); // prevent our view from becoming too small //
             TIME_SENSITIVITY = (TIME_SENSITIVITY > MAX_TIME_SENSITIVITY ? MAX_TIME_SENSITIVITY : TIME_SENSITIVITY); // prevent our view from becoming too small //
 
-            int rounded = ((int)TIME_SENSITIVITY / 10 ) * 10;
-            TIME_SENSITIVITY = rounded;
+            //noinspection IntegerDivisionInFloatingPointContext
+            TIME_SENSITIVITY = ((int)TIME_SENSITIVITY / 10 ) * 10;
 
             adjustDomains();
             adjustSeries();
@@ -225,7 +221,8 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
             }
 
             WIND_SENSITIVITY *= scaleFactor;
-            WIND_SENSITIVITY = (WIND_SENSITIVITY < 1 ? 1 : WIND_SENSITIVITY); // prevent our view from becoming too small //
+            WIND_SENSITIVITY = (WIND_SENSITIVITY < (MIN_WIND_SENSITIVITY+1) ? (MIN_WIND_SENSITIVITY+1) : WIND_SENSITIVITY); // prevent our view from becoming too small //
+            int MAX_WIND_SENSITIVITY = 12;
             WIND_SENSITIVITY = (WIND_SENSITIVITY > MAX_WIND_SENSITIVITY ? MAX_WIND_SENSITIVITY : WIND_SENSITIVITY); // prevent our view from becoming too small //
             adjustWindRange();
             windPlot.redraw();
@@ -271,9 +268,7 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         if (TIME_SENSITIVITY > 600) steps = 60; else
         if (TIME_SENSITIVITY > 480) steps = 50; else
         if (TIME_SENSITIVITY > 360) steps = 40; else
-        if (TIME_SENSITIVITY > 240) steps = 30; else
-        if (TIME_SENSITIVITY >= 60) steps = 20;
-
+        if (TIME_SENSITIVITY > 240) steps = 30;
         axisPlot.setDomainStep(StepMode.INCREMENT_BY_VAL, steps);
     }
 
@@ -293,10 +288,14 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
     }
 
     private void adjustWindRange() {
-        windPlot.setRangeBoundaries(0, WIND_SENSITIVITY, BoundaryMode.FIXED);
+        windPlot.setRangeBoundaries(MIN_WIND_SENSITIVITY, WIND_SENSITIVITY, BoundaryMode.FIXED);
         int step = 1;
-        if (WIND_SENSITIVITY >= 2) step = 2; else
-        if (WIND_SENSITIVITY >= 4) step = 4;
+        if (WIND_SENSITIVITY >= 2) {
+            step = 2;
+        }
+        if (WIND_SENSITIVITY >= 4) {
+            step = 4;
+        }
         windPlot.setRangeStep(StepMode.INCREMENT_BY_VAL, step);
     }
 
@@ -410,23 +409,22 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         readChartPrefs();
         setupPlots();
 
+        indicatorButton = view.findViewById(R.id.indicator);
+
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        fab.setOnClickListener(view1 -> {
 
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
-                // Create and show the dialog.
-                CustomSetupDialog newFragment = CustomSetupDialog.newInstance(MAX_TIME_SENSITIVITY, MAX_TEMP_SENSITIVITY, MAX_WIND_SENSITIVITY, windCalibration, showInFahrenheit, showInMinutes, autoAdjustTemperatureRange);
-                newFragment.setListener(SecondFragment.this);
-                newFragment.show(ft, "dialog");
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
             }
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            CustomSetupDialog newFragment = CustomSetupDialog.newInstance(MAX_TIME_SENSITIVITY, MAX_TEMP_SENSITIVITY, MIN_WIND_SENSITIVITY, windCalibration, showInFahrenheit, showInMinutes, autoAdjustTemperatureRange);
+            newFragment.setListener(SecondFragment.this);
+            newFragment.show(ft, "dialog");
         });
     }
 
@@ -467,25 +465,44 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         main.setSecondFragment(null);
     }
 
+    private float oldTempValue = 0;
+    private float oldWindValue = 0;
+    private boolean oldDataExist = false;
 
     @Override
     public synchronized void passData(long deviceID, float temperature, float wind) {
+        if (!isRed) {
+            indicatorButton.setBackgroundColor(Color.RED);
+            isRed = true;
+        } else {
+            indicatorButton.setBackgroundColor(0x0EB277);
+            isRed = false;
+        }
+        indicatorButton.invalidate();
+
         if (!showInFahrenheit) {
             temperature =  (temperature - 32) * 5/9;
         }
-        wind = wind / windCalibration;
-        WeatherData data = new WeatherData((double) temperature, (double) wind);
-        if ( oldData == null ) {
-            oldData = data;
+
+        if (!oldDataExist) {
+            oldDataExist = true;
+            oldWindValue = wind;
+            oldTempValue = temperature;
             pivotTemperature = temperature;
             adjustTemperatureRange(temperature);
             adjustWindRange();
-        }
-        if ( (abs(temperature - oldData.getTemperature()) > 3) || (abs(wind - oldData.getWind()) > 5) ) { // TRASH DATA REPLACE WITH ONE PREVIOUS
-            data = oldData;
         } else {
-            oldData = data;
+            if ( abs( oldTempValue - temperature ) > 1 )
+                temperature = oldTempValue;
+            else oldTempValue = temperature;
+            if ( abs(oldWindValue - wind) > 2 )
+                wind = oldWindValue;
+            else
+                oldWindValue = wind;
         }
+
+        wind = wind / windCalibration;
+        WeatherData data = new WeatherData((double) temperature, (double) wind);
         dataset.addNewData(data);
 
         temperatureSeries.addLast(null, temperature);
@@ -507,16 +524,18 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
     }
 
     @Override
-    public void onFinishSetupDialog(int maxTimeSensitivity, int maxTempSensitivity, int maxWindSensitivity, int windCalibration, boolean showInFahrenheit, boolean showInMinutes, boolean autoAdjustTemperatureRange) {
+    public void onFinishSetupDialog(int maxTimeSensitivity, int maxTempSensitivity, int minWindSensitivity, int windCalibration, boolean showInFahrenheit, boolean showInMinutes, boolean autoAdjustTemperatureRange) {
         MAX_TEMP_SENSITIVITY = maxTempSensitivity;
         MAX_TIME_SENSITIVITY = maxTimeSensitivity;
-        MAX_WIND_SENSITIVITY = maxWindSensitivity;
+        MIN_WIND_SENSITIVITY = minWindSensitivity;
         this.windCalibration = windCalibration;
         this.showInFahrenheit = showInFahrenheit;
         this.showInMinutes = showInMinutes;
         this.autoAdjustTemperatureRange = autoAdjustTemperatureRange;
         writeChartPrefs();
         axisPlot.redraw();
+        adjustWindRange();
+        windPlot.redraw();
     }
 }
 

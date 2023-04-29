@@ -48,17 +48,32 @@
                 ap:legendVisible="false"
                 ap:renderMode="use_background_thread" />
 
-            <com.androidplot.xy.XYPlot
-                android:id="@+id/axisChart"
-                style="@style/APDefacto.Light"
+            <LinearLayout
+                android:id="@+id/dummy"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="#F8D294"
-                ap:backgroundColor="#F8D294"
-                ap:graphBackgroundColor="#F8D294"
-                ap:legendVisible="false"
-                ap:lineLabelRotationBottom="0"
-                ap:renderMode="use_background_thread" />
+                android:background="#FFEFD5"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/indicator"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:backgroundTint="#4CAF50"
+                    android:enabled="false" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/axisChart"
+                    style="@style/APDefacto.Light"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="#F8D294"
+                    ap:backgroundColor="#F8D294"
+                    ap:graphBackgroundColor="#F8D294"
+                    ap:legendVisible="false"
+                    ap:lineLabelRotationBottom="0"
+                    ap:renderMode="use_background_thread" />
+            </LinearLayout>
 
             <com.androidplot.xy.XYPlot
                 android:id="@+id/windChart"
@@ -71,7 +86,6 @@
                 ap:graphBackgroundColor="#FFEFD5"
                 ap:legendVisible="false"
                 ap:renderMode="use_background_thread" />
-
         </LinearLayout>
 
         <LinearLayout

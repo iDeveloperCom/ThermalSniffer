@@ -19,7 +19,7 @@ public class CustomSetupDialog extends DialogFragment {
 
     EditText maxTime;
     EditText maxTemp;
-    EditText maxWind;
+    EditText minWind;
     EditText windCal;
     Switch isFahrenheit;
     Switch inMinutes;
@@ -27,7 +27,7 @@ public class CustomSetupDialog extends DialogFragment {
 
     int mMaxTimeSensitivity;
     int mMaxTempSensitivity;
-    int mMaxWindSensitivity;
+    int mMinWindSensitivity;
     int mWindCalibration;
     boolean mShowInFahrenheit;
     boolean mShowInMinutes;
@@ -38,7 +38,7 @@ public class CustomSetupDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putInt("maxTimeSensitivity", maxTimeSensitivity);
         args.putInt("maxTempSensitivity", maxTempSensitivity);
-        args.putInt("maxWindSensitivity", maxWindSensitivity);
+        args.putInt("minWindSensitivity", maxWindSensitivity);
         args.putInt("windCalibration", windCalibration);
         args.putBoolean("showInFahrenheit", showInFahrenheit);
         args.putBoolean("showInMinutes", showInMinutes);
@@ -53,7 +53,7 @@ public class CustomSetupDialog extends DialogFragment {
         assert getArguments() != null;
         mMaxTimeSensitivity = getArguments().getInt("maxTimeSensitivity");
         mMaxTempSensitivity = getArguments().getInt("maxTempSensitivity");
-        mMaxWindSensitivity = getArguments().getInt("maxWindSensitivity");
+        mMinWindSensitivity = getArguments().getInt("minWindSensitivity");
         mWindCalibration = getArguments().getInt("windCalibration");
         mShowInFahrenheit = getArguments().getBoolean("showInFahrenheit");
         mShowInMinutes = getArguments().getBoolean("showInMinutes");
@@ -71,7 +71,7 @@ public class CustomSetupDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         maxTime = view.findViewById(R.id.editMaxTime);
         maxTemp = view.findViewById(R.id.editMaxTemp);
-        maxWind = view.findViewById(R.id.editMaxWind);
+        minWind = view.findViewById(R.id.editMinWind);
         windCal = view.findViewById(R.id.editWindDivider);
         isFahrenheit = view.findViewById(R.id.switchFahrenheit);
         inMinutes = view.findViewById(R.id.switchMinutes);
@@ -83,7 +83,7 @@ public class CustomSetupDialog extends DialogFragment {
 
         maxTime.setText(""+mMaxTimeSensitivity);
         maxTemp.setText(""+mMaxTempSensitivity);
-        maxWind.setText(""+mMaxWindSensitivity);
+        minWind.setText(""+ mMinWindSensitivity);
         windCal.setText(""+mWindCalibration);
 
         Button dialogButton = view.findViewById(R.id.idButtonOk);
@@ -93,15 +93,15 @@ public class CustomSetupDialog extends DialogFragment {
             mMaxTempSensitivity = Integer.parseInt(maxTemp.getText().toString());
             if (mMaxTempSensitivity > 20) mMaxTempSensitivity = 20;
             if (mMaxTempSensitivity <= 0) mMaxTempSensitivity = 1;
-            mMaxWindSensitivity = Integer.parseInt(maxWind.getText().toString());
-            if (mMaxWindSensitivity > 10) mMaxWindSensitivity = 10;
-            if (mMaxWindSensitivity <= 0) mMaxWindSensitivity = 1;
+            mMinWindSensitivity = Integer.parseInt(minWind.getText().toString());
+            if (mMinWindSensitivity > 10) mMinWindSensitivity = 10;
+            if (mMinWindSensitivity < 0) mMinWindSensitivity = 0;
             mWindCalibration = Integer.parseInt(windCal.getText().toString());
             if (mWindCalibration < 1) mWindCalibration = 1;
             mShowInFahrenheit = isFahrenheit.isChecked();
             mShowInMinutes = inMinutes.isChecked();
             mAutoAdjustTemperatureRange = autoScale.isChecked();
-            mListener.onFinishSetupDialog(mMaxTimeSensitivity, mMaxTempSensitivity, mMaxWindSensitivity, mWindCalibration, mShowInFahrenheit, mShowInMinutes, mAutoAdjustTemperatureRange);
+            mListener.onFinishSetupDialog(mMaxTimeSensitivity, mMaxTempSensitivity, mMinWindSensitivity, mWindCalibration, mShowInFahrenheit, mShowInMinutes, mAutoAdjustTemperatureRange);
             dismiss();
         });
 
@@ -111,7 +111,7 @@ public class CustomSetupDialog extends DialogFragment {
         mListener = listener;
     }
     public interface CustomSetupDialogListener {
-        void onFinishSetupDialog(int maxTimeSensitivity, int maxTempSensitivity, int maxWindSensitivity, int windCalibration, boolean showInFahrenheit, boolean showInMinutes, boolean autoAdjustTemperatureRange);
+        void onFinishSetupDialog(int maxTimeSensitivity, int maxTempSensitivity, int minWindSensitivity, int windCalibration, boolean showInFahrenheit, boolean showInMinutes, boolean autoAdjustTemperatureRange);
     }
 
 }
