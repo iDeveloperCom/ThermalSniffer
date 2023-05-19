@@ -57,10 +57,11 @@
 
                 <Button
                     android:id="@+id/indicator"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="55dp"
                     android:backgroundTint="#4CAF50"
-                    android:enabled="false" />
+                    android:clickable="true"
+                    android:enabled="true" />
 
                 <com.androidplot.xy.XYPlot
                     android:id="@+id/axisChart"

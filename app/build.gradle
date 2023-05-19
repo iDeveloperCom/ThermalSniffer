@@ -10,7 +10,7 @@ android {
         minSdk 29
         targetSdk 32
         versionCode 1
-        versionName "1.0 Blue Wale"
+        versionName "1.1 Blue Wale"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,6 +28,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.ideveloper.thermalsniffer'
 }
 
 dependencies {

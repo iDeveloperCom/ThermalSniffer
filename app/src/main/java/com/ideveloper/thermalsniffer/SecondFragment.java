@@ -21,6 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.androidplot.ui.Anchor;
+import com.androidplot.ui.HorizontalPositioning;
+import com.androidplot.ui.VerticalPositioning;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
@@ -259,6 +262,10 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         temperaturePlot.setDomainBoundaries(0, TIME_SENSITIVITY*2, BoundaryMode.FIXED);
         axisPlot.setDomainBoundaries(0, TIME_SENSITIVITY, BoundaryMode.FIXED);
 
+        temperaturePlot.setUserDomainOrigin(TIME_SENSITIVITY*2);
+        windPlot.setUserDomainOrigin(TIME_SENSITIVITY*2);
+        axisPlot.setUserDomainOrigin(TIME_SENSITIVITY*2);
+
         int steps = 20;
 
         if (TIME_SENSITIVITY > 1080) steps = 120; else
@@ -304,9 +311,11 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         temperatureHeatCover = requireView().findViewById(R.id.temperatureHeatChart1);
         temperatureHeatLayout = requireView().findViewById(R.id.temperatureHeatChart);
 
+        temperaturePlot.setTitle("can");
+        temperaturePlot.getGraph().setLineLabelEdges(XYGraphWidget.Edge.RIGHT);
         temperaturePlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).getPaint().setColor(Color.TRANSPARENT);
-        temperaturePlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).getPaint().setColor(Color.RED);
-        temperaturePlot.getGraph().setMargins(20, 15, 5, 0);
+        temperaturePlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.RIGHT).getPaint().setColor(Color.RED);
+        temperaturePlot.getGraph().setMargins(0, 20, 100, 0);
 
         DashPathEffect dashFx = new DashPathEffect(new float[] {PixelUtils.dpToPix(1), PixelUtils.dpToPix(8)}, 0);
         temperaturePlot.getGraph().getDomainGridLinePaint().setAlpha(0);
@@ -317,12 +326,13 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         mTemperatureScaleDetector = new ScaleGestureDetector(getContext(), mTemperatureScaleGestureListener);
         temperaturePlot.setOnTouchListener((v, event) -> mTemperatureScaleDetector.onTouchEvent(event));
 
+        temperaturePlot.getTitle().position(150, HorizontalPositioning.ABSOLUTE_FROM_RIGHT, 5, VerticalPositioning.ABSOLUTE_FROM_TOP, Anchor.RIGHT_TOP);
     }
 
     private void plotOptionsForAxis() {
         axisPlot = requireView().findViewById(R.id.axisChart);
         axisPlot.setRangeBoundaries(0, 0, BoundaryMode.FIXED);
-        axisPlot.getGraph().setMargins(20, 0, 5, 0);
+        axisPlot.getGraph().setMargins(0, 0, 25, 0);
         axisPlot.getGraph().getGridBackgroundPaint().setColor(0xFFEFD5);
         axisPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).getPaint().setColor(Color.BLACK);
         axisPlot.getGraph().getDomainGridLinePaint().setAlpha(0);
@@ -356,10 +366,11 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
 
     private void plotOptionsForWind() {
         windPlot = requireView().findViewById(R.id.windChart);
-
+        windPlot.getGraph().setLineLabelEdges(XYGraphWidget.Edge.RIGHT);
         windPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).getPaint().setColor(Color.TRANSPARENT);
-        windPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).getPaint().setColor(Color.BLUE);
-        windPlot.getGraph().setMargins(20, 15, 5, 0);
+        windPlot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.RIGHT).getPaint().setColor(Color.BLUE);
+        windPlot.getGraph().setMargins(0, 15, 100, 0);
+
         DashPathEffect dashFx = new DashPathEffect(new float[] {PixelUtils.dpToPix(1), PixelUtils.dpToPix(8)}, 0);
         windPlot.getGraph().getDomainGridLinePaint().setAlpha(0);
         windPlot.getGraph().getRangeGridLinePaint().setPathEffect(dashFx);
@@ -388,13 +399,15 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
             ambientTemperatureSeries.addFirst(null, null);
             windSeries.addFirst(null, null);
         }
+
         LineAndPointFormatter temperatureSeriesFormat = new LineAndPointFormatter(Color.RED, null, null,null);
         temperatureSeriesFormat.getLinePaint().setStrokeWidth(3);
         LineAndPointFormatter ambientTemperatureSeriesFormat = new LineAndPointFormatter(Color.LTGRAY, null, null,null);
         LineAndPointFormatter windSeriesFormat = new LineAndPointFormatter(Color.BLUE, null, null,null);
         windSeriesFormat.getLinePaint().setStrokeWidth(2);
-        temperaturePlot.addSeries(temperatureSeries, temperatureSeriesFormat);
+
         temperaturePlot.addSeries(ambientTemperatureSeries, ambientTemperatureSeriesFormat);
+        temperaturePlot.addSeries(temperatureSeries, temperatureSeriesFormat);
         windPlot.addSeries(windSeries, windSeriesFormat);
     }
 
@@ -410,6 +423,20 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         setupPlots();
 
         indicatorButton = view.findViewById(R.id.indicator);
+        indicatorButton.setOnClickListener(v -> {
+            oldDataExist = false;
+
+            temperaturePlot.removeSeries(temperatureSeries);
+            temperaturePlot.removeSeries(ambientTemperatureSeries);
+            temperatureSeries = null;
+            ambientTemperatureSeries = null;
+            windPlot.removeSeries(windSeries);
+            windSeries = null;
+
+            temperaturePlot.clear();
+            windPlot.clear();
+            setupPlots();
+        });
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(view1 -> {
@@ -473,15 +500,20 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
     public synchronized void passData(long deviceID, float temperature, float wind) {
         if (!isRed) {
             indicatorButton.setBackgroundColor(Color.RED);
+
             isRed = true;
         } else {
             indicatorButton.setBackgroundColor(0x0EB277);
+
             isRed = false;
         }
         indicatorButton.invalidate();
 
+        String einheit = " °F";
+
         if (!showInFahrenheit) {
             temperature =  (temperature - 32) * 5/9;
+            einheit = " °C";
         }
 
         if (!oldDataExist) {
@@ -492,7 +524,7 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
             adjustTemperatureRange(temperature);
             adjustWindRange();
         } else {
-            if ( abs( oldTempValue - temperature ) > 1 )
+            if ( abs( oldTempValue - temperature ) > 2 )
                 temperature = oldTempValue;
             else oldTempValue = temperature;
             if ( abs(oldWindValue - wind) > 2 )
@@ -518,6 +550,8 @@ public class SecondFragment extends Fragment implements DataPassListener, Custom
         if ( (temperature > (pivotTemperature + TEMPERATURE_SENSITIVITY)) || (temperature < (pivotTemperature - TEMPERATURE_SENSITIVITY)) ){
             adjustTemperatureRange(temperature);
         }
+        String strDouble = String.format("%.2f", temperature);
+        temperaturePlot.setTitle(strDouble+einheit);
         temperaturePlot.redraw();
         windPlot.redraw();
         gradientRecalculate(data.getTemperature() - data.getMeanTemperature());
